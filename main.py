@@ -97,20 +97,49 @@ st.markdown("""
     margin-bottom:20px;
     font-family:Arial;
 }
-
 .hero{
     position:relative;
-    background:
-    linear-gradient(rgba(0,0,0,0.75),
-    rgba(0,0,0,0.85)),
-    url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1600");
-    background-size:cover;
-    background-position:center;
+    height:500px;
+    overflow:hidden;
     border-radius:20px;
-    padding:100px 50px;
-    text-align:center;
     margin-bottom:30px;
-    box-shadow:0px 10px 30px rgba(0,0,0,0.5);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.hero::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:300%;
+    height:100%;
+
+    background:
+    linear-gradient(rgba(0,0,0,.7),
+    rgba(0,0,0,.8)),
+    url("https://wallpapercave.com/wp/wp1945897.jpg");
+
+    background-size:cover;
+    background-repeat:repeat-x;
+
+    animation:scrollBanner 40s linear infinite;
+}
+
+@keyframes scrollBanner{
+0%{
+transform:translateX(0);
+}
+100%{
+transform:translateX(-66%);
+}
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    text-align:center;
 }
 
 .hero h1{
@@ -127,21 +156,46 @@ st.markdown("""
     margin-bottom:30px;
 }
 
-.hero button{
+.hero-btn{
     background:#E50914;
     color:white;
-    border:none;
-    padding:15px 40px;
+    padding:15px 35px;
+    border-radius:8px;
+    text-decoration:none;
     font-size:20px;
     font-weight:bold;
-    border-radius:8px;
-    cursor:pointer;
+}
+
+.hero-btn:hover{
+    background:#b20710;
 }
 
 .hero button:hover{
     background:#b20710;
 }
+.movie-card{
+    overflow:hidden;
+    border-radius:12px;
+    cursor:pointer;
+    transition:0.4s;
+    margin-bottom:10px;
+}
 
+.movie-card img{
+    width:100%;
+    border-radius:12px;
+    transition:0.4s;
+}
+
+.movie-card:hover{
+    transform:translateY(-10px) scale(1.08);
+    box-shadow:0 20px 50px rgba(0,0,0,.8);
+}
+
+.movie-card:hover img{
+    transform:scale(1.15);
+}
+            
 .tagline{
     color:#facc15;
     font-size:18px;
@@ -157,10 +211,10 @@ st.markdown(
     '<div class="netflix">NETFLIX</div>',
     unsafe_allow_html=True
 )
-
-# Hero Poster
 st.markdown("""
 <div class="hero">
+
+<div class="hero-content">
 
 <h1>
 🎬 Unlimited Movies,<br>
@@ -171,28 +225,29 @@ TV Shows & More
 Discover Your Next Favorite Movie with AI 🤖
 </p>
 
-<button>
+<a href="#search" class="hero-btn">
 🍿 Get Recommendations
-</button>
+</a>
 
 <div class="tagline">
 Powered by Machine Learning • 5000+ Movies • Personalized Picks
 </div>
 
 </div>
-""", unsafe_allow_html=True)
 
+</div>
+""", unsafe_allow_html=True)
 # -------------------------
 # SEARCH
 # -------------------------
 
-selected_movie=st.selectbox(
+st.markdown('<div id="search"></div>', unsafe_allow_html=True)
 
-"Search Movie",
-
-movies["title"].values
-
+selected_movie = st.selectbox(
+    "🔍 Search Movie",
+    movies["title"].values
 )
+
 
 # -------------------------
 # RECOMMEND
@@ -283,13 +338,14 @@ if st.button(
 
         with col:
 
-            st.image(
-
-            poster,
-
-            use_container_width=True
-
-            )
+            st.markdown(
+    f"""
+    <div class="movie-card">
+        <img src="{poster}">
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
             st.write(
             name
@@ -311,7 +367,7 @@ if st.button(
 
                 st.link_button(
 
-                "▶ Trailer",
+                "▶ Movie Trailer",
 
                 trailer
 
@@ -319,7 +375,7 @@ if st.button(
 
             st.link_button(
 
-            "🎬 Details",
+            "🎬 Movie Info",
 
             f"https://www.themoviedb.org/movie/{movie_id}"
 
@@ -352,10 +408,14 @@ if "results" in data:
                 + movie["poster_path"]
             )
 
-            st.image(
-                poster,
-                use_container_width=True
-            )
+            st.markdown(
+    f"""
+    <div class="movie-card">
+        <img src="{poster}">
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
             st.write(movie["title"])
 
@@ -370,12 +430,12 @@ if "results" in data:
             if trailer:
 
                 st.link_button(
-                    "▶ Trailer",
+                    "▶ Movie Trailer",
                     trailer
                 )
 
             st.link_button(
-                "🎬 More Info",
+                "🎬 Movie Info",
                 f"https://www.themoviedb.org/movie/{movie['id']}"
             )
 
@@ -407,10 +467,14 @@ if "results" in data:
                 + movie["poster_path"]
             )
 
-            st.image(
-                poster,
-                use_container_width=True
-            )
+            st.markdown(
+    f"""
+    <div class="movie-card">
+        <img src="{poster}">
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
             st.write(movie["title"])
 
@@ -425,12 +489,12 @@ if "results" in data:
             if trailer:
 
                 st.link_button(
-                    "▶ Trailer",
+                    "▶ Movie Trailer",
                     trailer
                 )
 
             st.link_button(
-                "🎬 More Info",
+                "🎬 Movie Info",
                 f"https://www.themoviedb.org/movie/{movie['id']}"
             )
 
